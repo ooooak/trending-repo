@@ -5,11 +5,32 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
   <style>
-      span {
-        padding: 0px;
-        font-size: 12px;
-        text-transform: lowercase;
-      }
+    body{
+      background-color: #ececec;
+    }
+    #app {
+      max-width: 700px;
+      margin: auto;
+    }
+    .item{
+      border: 1px solid #efefef;
+      padding: 12px;
+      margin-bottom: 12px;
+      background-color: #f2f2f2;
+      list-style: none;
+    }
+    .items{
+      padding:0px; 
+    }
+    .items .item span {
+      padding: 0px;
+      font-size: 12px;
+      text-transform: lowercase;
+    }
+    /* .items .description{} */
+    .items a{
+      font-size:20px;
+    }
   </style>
 </head>
 <body>
@@ -17,8 +38,8 @@
 
       <div v-for="key in itemsKeys">
           <h3>{{key}}</h3>
-          <ul>
-              <li v-for="item in items[key]">
+          <ul class="items">
+              <li class="item" v-for="item in items[key]">
                 <div>
                   <a v-bind:href="item.url">
                     {{item.name}}
@@ -26,7 +47,7 @@
                   &nbsp;
                   <span>{{item.language}}</span>
                   <span>{{item.stars}}</span>
-                  <p>{{item.description}}</p>
+                  <p class="description">{{item.description}}</p>
                 </div>
               </li>
           </ul>

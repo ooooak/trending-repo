@@ -1,11 +1,11 @@
-Keep track of new trending repos on github
+### Keep track of new trending repos on github
 
 
-> loda index.html into browser to run
+loda index.html into browser to run
 
 ![](https://i.imgur.com/1xGRetE.jpg)
 
-## to fetch latest repos 
+### Fetch latest repos 
 
 
 > go run main.go

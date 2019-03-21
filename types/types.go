@@ -55,7 +55,9 @@ func (r *Records) urlExists(url *string) bool {
 	return false
 }
 
-// Consume !
+// Consume write data in database
+// skip duplicate urls in entry
+// should this method be in db ?
 func (r *Records) Consume(repos Repos) {
 	index := currentDate()
 	var items Repos

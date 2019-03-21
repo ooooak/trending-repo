@@ -1,7 +1,7 @@
 ### Keep track of new trending repos on github
 
 
-loda index.html into browser to run
+loda static/index.html into browser to run
 
 ![](https://i.imgur.com/1xGRetE.jpg)
 

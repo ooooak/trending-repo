@@ -1,9 +1,21 @@
 // sort items by star
-(function () {  
-  for (const key in __output) {
-    __output[key] = __output[key].sort((a, b) => {
+(function () {
+  const storage = __output;
+  __output = {};
+
+  for (const key of Object.keys(storage).splice(-20)) {
+    let data = storage[key];    
+    if (data == null || data == void 0){
+      data = [];
+    }
+
+    
+
+    __output[key] = data.sort((a, b) => {
       return a.stars > b.stars ? -1 : 1;
-    });
+    })
+    // .filter(item => item.language == "Clojure")
+    .splice(0, 50);;
   }
 })();
 

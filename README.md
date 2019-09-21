@@ -1,7 +1,7 @@
 ### Keep track of new trending repos on github
 
 
-load static/index.html into browser to run
+run static/index.html
 
 ![](https://i.imgur.com/1xGRetE.jpg)
 

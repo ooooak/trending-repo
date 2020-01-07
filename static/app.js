@@ -1,59 +1,59 @@
-// sort items by star
-const flatten = function (storage){
-  let ret = [];
-  for (const key of Object.keys(storage)) {
-    let local = storage[key];
-    if (local !== null && local !== void 0){      
-      ret = ret.concat(local)
-    }
+
+// Hello Haskell
+const concat = (arr1, arr2) => arr1.concat(arr2)
+const flatten = obj => Object.values(obj).reduce(concat);
+const sortCallback = (a, b) => a.stars > b.stars ? -1 : 1;
+const sortStatsByTotal = (a, b) => b[1].total - a[1].total;
+const sortStatsByTotalStars = (a, b) => b[1].totalStars - a[1].totalStars;
+
+const val = function(value, _default){
+  if (value == null || value == void 0){
+    return _default;
   }
-  return ret;
+  return value;
 }
 
-const sortCallback = function(a, b){
-  return a.stars > b.stars ? -1 : 1;
-}
+// Sort dates
+const sortDate = (a, b) => date(a) > date(b) ? -1 : 1;
 
-const dateList = function(storage){
-  let ret = {};
-  for (const key of Object.keys(storage).splice(-20)) {
-    let local = storage[key];    
-    if (local == null || local == void 0){
-      local = [];
-    }
-    ret[key] = local.sort(sortCallback).splice(0, 50);
-    // .filter(item => item.language == "Clojure")
-  }
-  return ret;
-};
-
-(function () {
-  const storage = __output;
-  __output = {};
-
-  // __output["All"] = flatten(storage).sort(sortCallback);
-  // console.log(__output);  
-  __output = dateList(storage);
-})();
-
-const buildDate = function(date){
+const date = (date) => {
   const [d, m, y] = date.split("-")
   return new Date(y, m - 1, d);
 };
 
+const cleanEntries = function(storage){
+  let ret = {};
+  entryKeys.forEach(k => {
+    ret[k] = val(storage[k], []).sort(sortCallback);
+  });
+  return ret;
+};
+
+const makeStats = function(ret, row){
+  if (row != null && row.language != ""){
+    let data = val(ret[row.language], {totalStars: 0, total: 0});      
+    data.totalStars += row.stars;
+    data.total += 1;
+    ret[row.language] = data;
+  }
+  return ret;
+}
+
+const entryKeys = Object.keys(__output).sort(sortDate).splice(0, 3); 
+
 var app = new Vue({
   el: '#app',
-  data: {
-    // items: __output,
-  },
+  data: {},
   computed:{
     itemsKeys: function(){
-      return Object.keys(__output).sort((a, b) => {
-        return buildDate(a) > buildDate(b) ? -1 : 1;
-      });
+      return entryKeys;
     }, 
     items: function(){
-      return __output
+      return cleanEntries(__output);
+    },
+    stats: function(){
+      const coll = flatten(rows).reduce(makeStats, {});
+      return Object.entries(coll).sort(sortStatsByTotalStars);
     }
   }
 })

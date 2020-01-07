@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"path/filepath"
 
@@ -10,33 +11,29 @@ import (
 	"./types"
 )
 
-var allowedLangs = [...]string{
-	"c%23", // c#
-	"f%23", // f#
-	"c", "go", "ocaml", "rust", "swift", "typescript",
-	"c++", "erlang", "clojure", "haskell", "elm", "elixir",
-	"common-lisp", "crystal", "css", "d", "dart", "html",
-	"java", "julia", "kotlin", "lua", "nim", "php", "python",
-	"ruby", "sass", "scala", "webassembly",
+func allowedLangs() []string {
+	return []string{
+		"c%23", // c#
+		"f%23", // f#
+		"c", "go", "ocaml", "rust", "swift", "typescript",
+		"c++", "erlang", "clojure", "haskell", "elm", "elixir",
+		"common-lisp", "crystal", "css", "d", "dart", "html",
+		"java", "julia", "kotlin", "lua", "nim", "php", "python",
+		"ruby", "sass", "scala", "webassembly",
+	}
 }
 
 func check(err error) {
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
 
-func urls() []string {
-	// const
-	url := "https://github-trending-api.now.sh/repositories?language="
-	var urls []string
-	for _, lang := range allowedLangs {
-		urls = append(urls, url+lang+"&since=daily")
-	}
-	return urls
+func createURL(language string) string {
+	return "https://github-trending-api.now.sh/repositories?language=" + language + "&since=daily"
 }
 
-func getURLContent(url string, ch chan<- types.Repos) {
+func request(url string, ch chan<- types.Repos) {
 	resp, err := http.Get(url)
 	if err != nil {
 		ch <- nil
@@ -74,13 +71,12 @@ func main() {
 	records, err := db.Read()
 	check(err)
 
-	urls := urls()
 	ch := make(chan types.Repos)
-	for _, url := range urls {
-		go getURLContent(url, ch)
+	for _, lang := range allowedLangs() {
+		go request(createURL(lang), ch)
 	}
 
-	for range urls {
+	for range allowedLangs() {
 		records.Consume(<-ch)
 	}
 
